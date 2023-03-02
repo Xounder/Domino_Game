@@ -1,0 +1,19 @@
+#PT/BR
+Começa quem tem a maior peça com valor duplo (Ex.: (6, 6))
+Aperte no botão look (olho) para mostrar suas peças
+Aperte na peça e escolha o local que deseja coloca-lá
+
+Caso não possua uma peça para jogar, compre-a apertando no botão BUY.
+Caso não haja mais peças para comprar passe a vez apertando no botão PASS.
+
+Ganha quem jogar todas as cartas na mesa.
+
+#ENGLISH
+Whoever has the biggest piece with a double value starts (Ex.: (6, 6))
+Press the look button (eye) to show your pieces
+Click on the piece and choose the place you want to place it
+
+If you don't have a piece to play, buy it by pressing the BUY button.
+If there are no more pieces to buy, pass the turn by pressing the PASS button.
+
+Whoever plays all the cards on the table wins.
