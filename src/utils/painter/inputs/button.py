@@ -2,20 +2,19 @@ import pygame
 
 from managers.input_manager import InputManager
 
-class ClickInput:
+class Button:
     """
     Represents a clickable
     """
 
-    def __init__(self, surf_size:tuple, rect_pos:tuple, center:bool=True, topleft:bool=False) -> None:
+    def __init__(self, surf_size:tuple[int, int], rect_pos:tuple[int, int], 
+                 center:bool=True, topleft:bool=False) -> None:
         """
         Initializes the clickable with given dimensions and position.
         
         Args:
-            surf_size (tuple): The size of the rectangle surface.
+            surf_size (tuple[int, int]): The size of the rectangle surface.
             rect_pos (tuple): The position to draw the rectangle.
-            d (int): The distance for border thickness.
-            r (int): The radius for circle effects.
             center (bool): If True, position the rectangle centered at rect_pos.
             topleft (bool): If True, position the rectangle at the top-left of rect_pos.
         """
@@ -25,7 +24,8 @@ class ClickInput:
         if topleft:
             self.rect = self.surf.get_rect(topleft=rect_pos)
 
-    def get_rect(self, center:bool=False, topleft:bool=False, size:bool=False, midright:bool=False) -> pygame.Rect:
+    def get_rect(self, center:bool=False, topleft:bool=False, 
+                 size:bool=False, midright:bool=False) -> pygame.Rect:
         """
         Returns the rectangle's position or size based on specified flags.
         
@@ -44,12 +44,12 @@ class ClickInput:
         if midright: return self.rect.midright
         return self.rect
 
-    def is_rect_collide_point(self, point:list) -> bool:
+    def is_rect_collide_point(self, point:tuple[int, int]) -> bool:
         """
         Checks if the given point collides with the rectangle.
         
         Args:
-            point (list): The point to check for collision.
+            point (tuple[int, int]): The point to check for collision.
         
         Returns:
             bool: True if the point collides with the rectangle, False otherwise.

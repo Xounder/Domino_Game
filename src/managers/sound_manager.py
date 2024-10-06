@@ -31,7 +31,7 @@ class SoundManager:
                 SoundManager.all_sounds[sound_name] = s
 
     @staticmethod
-    def play_sound(sound_name) -> None:
+    def play_sound(sound_name:str) -> None:
         """
         Plays the specified sound. Stops the currently playing sound if any.
 

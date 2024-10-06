@@ -6,7 +6,7 @@ class Painter:
     """
 
     @staticmethod
-    def blit_text(screen:pygame.display, text:str, color:str, pos:list, 
+    def blit_text(screen:pygame.display, text:str, color:str, pos:tuple[int,int], 
                   topright:bool=False, center:bool=False, font_size:int=42) -> None:
         """
         Renders and blits text onto the screen at the specified position.
@@ -23,15 +23,15 @@ class Painter:
         font = pygame.font.Font('font/Pixeltype.ttf', font_size)
         txt = font.render(text, False, color)
 
-        if topright: txt_rect = txt.get_rect(topright=(pos))
-        elif center: txt_rect = txt.get_rect(center= (pos))
-        else: txt_rect = txt.get_rect(topleft= (pos))       
+        if topright: txt_rect = txt.get_rect(topright= pos)
+        elif center: txt_rect = txt.get_rect(center= pos)
+        else: txt_rect = txt.get_rect(topleft= pos)       
 
         screen.blit(txt, txt_rect)
 
     @staticmethod
-    def blit_text_shadow(screen:pygame.display, text:str, color:str, pos:list, 
-                         back_color:str='black', topright:bool=False, center:bool=False, font_size:int=42) -> None:
+    def blit_text_shadow(screen:pygame.display, text:str, color:str, pos:tuple[int,int], back_color:str='black', 
+                         topright:bool=False, center:bool=False, font_size:int=42) -> None:
         """
         Renders and blits text with a shadow effect on the screen.
         
@@ -49,7 +49,8 @@ class Painter:
         Painter.blit_text(screen, text, color, pos, topright, center, font_size)
 
     @staticmethod
-    def draw_rect(screen:pygame.display, size:list, pos:list, d:int, f_color:str='black', b_color:str='white') -> None:
+    def draw_rect(screen:pygame.display, size:tuple[int,int], pos:tuple[int,int], d:int, 
+                  f_color:str='black', b_color:str='white') -> None:
         """
         Draws a filled rectangle with a border on the screen.
         

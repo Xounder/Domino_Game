@@ -1,8 +1,8 @@
 import pygame
 
 import resources.settings as config
-from utils.painter.inputs.click_rect import ClickRect
-from utils.painter.inputs.click_circle import ClickCircle
+from utils.painter.inputs.rect_button import RectButton
+from utils.painter.inputs.circle_button import CircleButton
 
 class StartWindow:
     def __init__(self, active_game):
@@ -13,36 +13,32 @@ class StartWindow:
         
         # Quantity Players - Selectors
         pos = [config.SCREEN_WIDTH/2 - 330, config.SCREEN_HEIGHT/2 - 222]
-        self.players_buttons = [ClickRect(surf_size=(200, 125), 
-                                       rect_pos=((pos[0] + (i * 200)), pos[1]), 
-                                       dist=3, 
-                                       topleft=True) 
-                                       for i in range(3)]
+        self.players_buttons = [RectButton(surf_size=(200, 125), rect_pos=((pos[0] + (i * 200)), pos[1]), 
+                                 dist=3, topleft=True)  for i in range(3)]
         
         # Start Button
-        self.start_button = ClickRect(surf_size=(255, 75), 
-                                      rect_pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT - 100), 
-                                      dist=3, 
-                                      center=True) 
+        self.start_button = RectButton(surf_size=(255, 75), 
+                                       rect_pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT - 100), 
+                                       dist=3, center=True) 
 
         # Dual Mode Button
-        self.dual_mode_button = ClickCircle(size=12,
+        self.dual_mode_button = CircleButton(size=12,
                                             rect_pos=(config.SCREEN_WIDTH - 300, config.SCREEN_HEIGHT/2 - 70), 
                                             colors=['red', 'blue'])
 
     def draw(self):
-        self.start_button.draw_animated_rect_with_text(self.display_surface, text='START', text_color='black', 
-                                                       font_size=42, text_back_color='white')
+        self.start_button.draw_text_button(self.display_surface, text='START', text_color='black', 
+                                           font_size=42, text_back_color='white')
 
         if self.qnt_ply == config.MAXIMUM_QUANTITY_PLAYER:
-            self.dual_mode_button.draw_animated_circle_with_text(self.display_surface, text='P1 & P3 X P2 & P4',
-                                                                text_color='red', text_back_color='white',
-                                                                font_size=30, back_color='black')
+            self.dual_mode_button.draw_text_button(self.display_surface, text='P1 & P3 X P2 & P4',
+                                                   text_color='red', text_back_color='white',
+                                                   font_size=30, back_color='black')
             
         for i, ply_button in enumerate(self.players_buttons):
             rect_color = 'red' if i + config.MINIMUN_QUANTITY_PLAYER == self.qnt_ply else 'black'
 
-            ply_button.draw_animated_rect_with_text(self.display_surface, 
+            ply_button.draw_text_button(self.display_surface, 
                                                     text=f'{i + config.MINIMUN_QUANTITY_PLAYER} Players', 
                                                     text_color='black', font_size=42, text_back_color='white', 
                                                     f_color=rect_color)
