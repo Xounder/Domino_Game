@@ -1,10 +1,13 @@
 import pygame
-from settings.settings import *
+from resources.settings import *
 from models.map import Map
 from models.player import Player
 from utils.timer import Timer
 
 class Control:
+    # Remover os draws daqui
+    # Conterá o controle do jogo
+
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.run_game = False

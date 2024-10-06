@@ -1,7 +1,10 @@
 import pygame, sys
-from settings.settings import *
+
+from resources.settings import *
 from services.control import Control
 from services.start_window import StartWindow
+
+from managers.timer_manager import TimerManager
 
 class Game:
     def __init__(self):
@@ -19,6 +22,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+            TimerManager.update_timers()
 
             if self.control_game.run_game:
                 self.control_game.draw()

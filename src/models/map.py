@@ -1,20 +1,24 @@
 map = [
-    [22,   21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
-    [23,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  9],
-    [24,   25, 26, 27,  0,  0,  0,  0,  0,  0,  0,  0,  8],
-    [0,     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7],
-    [-6,   -5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6],
-    [-7,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [-8,    0,  0,  0,  0,  0,  0,  0,  0,-27,-26,-25,-24],
-    [-9,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,-23],
-    [-10, -11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22]]
+      [22,   21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
+      [23,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  9],
+      [24,   25, 26, 27,  0,  0,  0,  0,  0,  0,  0,  0,  8],
+      [0,     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7],
+      [-6,   -5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6],
+      [-7,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+      [-8,    0,  0,  0,  0,  0,  0,  0,  0,-27,-26,-25,-24],
+      [-9,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,-23],
+      [-10, -11,-12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22]]
 
 import pygame
-from settings.settings import *
+from resources.settings import *
 from random import randint
 from utils.timer import Timer
 
 class Map:
+    # Remover as logicas, apenas será inserida as peças 
+    # Conterá a informação de quais peças estão na mesa e em quais partes do mapa
+    # Retorna as ultimas posições/valores left e right das peças
+
     def __init__(self, blit_shadow_text):
         self.display_surface = pygame.display.get_surface()
         # manage all pieces in map and receive pieces from players or give it to them

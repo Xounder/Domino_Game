@@ -1,7 +1,12 @@
 import pygame
-from settings.settings import *
+from resources.settings import *
 
 class Player:
+    # Inputs serão passados para ca
+    # Conterá as regras das logicas de escolha da peça e inserção delas no mapa 
+    # (passsará a peça para o mapa qnd escolhida)
+    # Atualizará as peças (update, draw)
+
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.pieces = []
