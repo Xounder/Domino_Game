@@ -12,7 +12,7 @@ class Control:
         self.display_surface = pygame.display.get_surface()
         self.run_game = False
         self.active_timer_once = True
-        self.map_game = Map(self.blit_shadow_text)
+        self.map_game = Map()
         # win surface
         win_surf = pygame.image.load('img/win.png').convert()
         self.win_surf = pygame.transform.scale(win_surf, (win_surf.get_width()*2, win_surf.get_height()*2))
@@ -80,3 +80,74 @@ class Control:
             if self.active_timer_once:
                 self.show_msg_timer.active()
                 self.active_timer_once = False
+
+
+
+
+
+    '''def next_player(self):               ####### CONTROLLER #######
+        # passa para o proximo player
+        self.show_player_pieces = False
+        self.show_piece_surf = self.show_piece_img[0]
+        self.atual_player.piece_choosed = False
+        if not self.check_win():
+            is_draw = False
+            if self.id_player == self.first_player:
+                is_draw = self.check_draw()
+            if not is_draw:
+                self.atual_player.section = 0
+                if self.id_player < len(self.players)-1:
+                    self.id_player += 1
+                else:
+                    self.id_player = 0
+                self.atual_player = self.players[self.id_player]'''
+
+    '''def check_win(self):               ####### CONTROLLER #######
+        # verifica se o atual jogador venceu
+        if len(self.players[self.id_player].pieces) == 0:
+            self.win = True
+            self.winner = self.id_player
+            return True
+        return False'''
+
+    '''def check_draw(self):               ####### CONTROLLER #######
+        # verifica se deu empate
+        if len(self.all_pieces) > 0:
+            return False
+        else:
+            for player in self.players:
+                for piece in player.pieces:
+                    if self.is_playable(piece):
+                        return False
+        self.draw_game = True
+        return True'''
+    
+
+
+
+    '''def distribuition_pieces(self):                ####### CONTROLLER + PLAYER #######
+        for i, player in enumerate(self.players):
+            for j in range(7):
+                piece = self.buy_piece()
+                if piece[0] == piece[1] and piece[0] > self.entry_piece[0]:
+                    self.entry_piece = piece[:]
+                    self.id_player = i
+                    self.first_player = i
+                    self.atual_player = self.players[self.id_player]
+                player.buy_piece(piece[:])'''
+    
+
+    '''def buy_piece(self):                ####### CONTROLLER #######
+        choosed = randint(0, len(self.all_pieces)-1)
+        piece = self.all_pieces[choosed][:]
+        self.all_pieces.pop(choosed)
+        if len(self.all_pieces) == 0:
+            self.buy_pass_surf = self.buy_pass_img[1]
+        return piece'''
+    
+                
+    '''def import_pieces_assets(self):                ####### CONTROLLER #######
+        self.pieces_surf = {'up': [], 'down': [], 'left': [], 'right': []}
+        for key in self.pieces_surf:
+            pieces_surf = [pygame.image.load(f'img/pieces/{key}/{i}.png').convert() for i in range(7)]
+            self.pieces_surf[key] = [pygame.transform.scale(pieces_surf[i], (tile_size/2, tile_size/2)) for i in range(7)]'''

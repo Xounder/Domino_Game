@@ -19,8 +19,8 @@ SCREEN_WIDTH = 780
 SCREEN_HEIGHT = 650
 
 # Quantidade de jogadores
-MINIMUN_QUANTITY_PLAYER = 2
-MAXIMUM_QUANTITY_PLAYER = 4
+MIN_QUANTITY_PLAYER = 2
+MAX_QUANTITY_PLAYER = 4
 
 all_pieces = [
     [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6],

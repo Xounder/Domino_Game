@@ -43,6 +43,10 @@ class Button:
         if size: return self.rect.size
         if midright: return self.rect.midright
         return self.rect
+    
+    def set_rect(self, pos:tuple[int, int], center=True, topleft=False):
+        if center: self.rect.center = pos
+        if topleft: self.rect.topleft = pos
 
     def is_rect_collide_point(self, point:tuple[int, int]) -> bool:
         """

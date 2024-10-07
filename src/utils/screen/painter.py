@@ -49,7 +49,7 @@ class Painter:
         Painter.blit_text(screen, text, color, pos, topright, center, font_size)
 
     @staticmethod
-    def draw_rect(screen:pygame.display, size:tuple[int,int], pos:tuple[int,int], d:int, 
+    def draw_rect(screen:pygame.display, size:tuple[int,int], pos:tuple[int,int], dist:int, 
                   f_color:str='black', b_color:str='white') -> None:
         """
         Draws a filled rectangle with a border on the screen.
@@ -58,11 +58,11 @@ class Painter:
             screen (pygame.display): The surface to draw on.
             size (list): The size of the rectangle.
             pos (list): The position to draw the rectangle.
-            d (int): The border thickness.
+            dist (int): The border thickness.
             f_color (str): The fill color of the rectangle.
             b_color (str): The border color of the rectangle.
         """
         pygame.draw.rect(screen, f_color, (pos[0], pos[1], size[0], size[1]), 0)
-        pygame.draw.rect(screen, b_color, (pos[0] + d , pos[1]+ d, size[0] - d*2 , size[1] - d*2), 0)
+        pygame.draw.rect(screen, b_color, (pos[0] + dist , pos[1] + dist, size[0] - dist * 2 , size[1] - dist * 2), 0)
 
 

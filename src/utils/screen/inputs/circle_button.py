@@ -1,8 +1,8 @@
 import pygame
 
 from managers.input_manager import InputManager
-from utils.painter.inputs.button import Button
-from utils.painter.painter import Painter
+from utils.screen.inputs import Button
+from utils.screen.painter import Painter
 
 class CircleButton(Button):
     """

@@ -1,7 +1,7 @@
 import pygame
 
-from utils.painter.inputs.button import Button
-from utils.painter.painter import Painter
+from utils.screen.inputs import Button
+from utils.screen.painter import Painter
 
 class RectButton(Button):
     """
@@ -42,5 +42,6 @@ class RectButton(Button):
                          b_color:list[str]=['red', 'gray']) -> None:
         
         self.draw_button(screen, f_color, b_color)
+        text_color = b_color[1] if self.is_rect_collide_point(pygame.mouse.get_pos()) else text_color
         Painter.blit_text_shadow(screen, text, text_color, self.rect.center, 
                                  font_size=font_size, center=True, back_color=text_back_color)

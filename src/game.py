@@ -6,6 +6,8 @@ from services.start_window import StartWindow
 
 from managers.timer_manager import TimerManager
 
+from models.player import Player
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -15,6 +17,7 @@ class Game:
 
         self.control_game = Control()
         self.start_window = StartWindow(self.control_game.active_game)
+        self.player = Player(0)
 
     def run(self):
         while True:
