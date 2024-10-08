@@ -22,6 +22,11 @@ SCREEN_HEIGHT = 650
 MIN_QUANTITY_PLAYER = 2
 MAX_QUANTITY_PLAYER = 4
 
+# Tipos de Jogadores
+PLAYER = 0
+AI = 1
+INACTIVE = 2
+
 all_pieces = [
     [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6],
     [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6],

@@ -5,7 +5,6 @@ from models.piece import Piece
 from utils.screen import RectButton
 
 class Map:
-
     def __init__(self):
         self.screen = pygame.display.get_surface()
         self.RIGHT = 'right'
@@ -18,7 +17,6 @@ class Map:
         self.background_rect = self.background.get_rect(topleft= (0, 0))
 
     def start_game(self):
-        self.all_pieces = config.domino_pieces[:]
         self.board_pieces = []
         self.board_pieces_orientation = []
         self.last_pieces = {
@@ -29,7 +27,6 @@ class Map:
             self.RIGHT: 0,
             self.LEFT: 0
         }
-        self.starting_double = [-1, -1]
 
     def add_piece_on_board(self, piece:Piece, piece_side:str, orientation:str):
         if len(self.board_pieces) == 0:
@@ -39,7 +36,7 @@ class Map:
             self.last_pieces[self.LEFT] = piece.values
         else:
             if piece.values[0] != self.last_pieces[piece_side][1]:
-                piece.values = [piece.values[1], piece.values[0]]
+                piece.values.reverse()
 
             self.next_position[piece_side] += 1 
             self.last_pieces[piece_side] = piece.values

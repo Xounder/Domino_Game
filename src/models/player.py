@@ -10,14 +10,7 @@ class Player:
         self.screen = pygame.display.get_surface()
         self.id = id
         self.pieces = []
-        self.section = 0
         self.MAX_PIECES_ON_SCREEN = 7
-        self.selected_piece = 0
-        self.is_selected_piece = False
-        self.is_show_pieces = False
-        self.is_next_section = False
-        self.is_prev_section = False
-        self.played = False
 
         self.bottom_size_y = 200
 
@@ -37,10 +30,23 @@ class Player:
         self.show_button = RectButton((180, 100), (config.SCREEN_WIDTH/2, 
                                                    config.SCREEN_HEIGHT - self.bottom_size_y/2), 3)
         #Mudar para button
-        choose_piece_size = (55, 90)
-        self.choose_piece_button = [RectButton(choose_piece_size, (255 + i * (choose_piece_size[0] + 10), 
-                                                                   config.SCREEN_HEIGHT - self.bottom_size_y/2), 3) 
-                                                                   for i in range(7)]
+        self.choose_piece_size = (55, 90)
+        pos = (self.choose_piece_size[0] + 10, config.SCREEN_HEIGHT - self.bottom_size_y/2)
+        self.choose_piece_button = [Button(self.choose_piece_size, (255 + i * pos[0], pos[1]), 3) 
+                                                                    for i in range(7)]
+        self.reset()
+
+    def reset(self) -> None:
+        self.section = 0
+        self.selected_piece = -1
+        self.is_selected_piece = False
+        self.is_show_pieces = False
+        self.is_next_section = False
+        self.is_prev_section = False
+        self.played = False
+
+    def is_win(self) -> bool:
+        return not self.pieces
 
     def add_piece(self, piece:Piece) -> None:
         self.pieces.append(piece)
@@ -48,10 +54,23 @@ class Player:
     def remove_piece(self) -> None:
         self.pieces.pop(self.selected_piece)
 
+    def can_play(self, last_pieces:dict[tuple[int, int]]) -> bool:
+        for i in range(len(self.pieces)):
+            playable_sides = self.get_piece_playable_sides(piece_id=i, last_pieces=last_pieces)
+            if any(playable_sides):
+                return True
+        return False
+    
+    def get_piece_playable_sides(self, piece_id:int, last_pieces:dict[tuple[int, int]]) -> tuple[bool, bool]:
+        return self.pieces[piece_id].is_playable(last_pieces)
+
     def get_visible_pieces_index(self) -> tuple[int, int]:
         start_index = self.section * self.MAX_PIECES_ON_SCREEN
         end_index = min(start_index + self.MAX_PIECES_ON_SCREEN, len(self.pieces))
         return (start_index, end_index)
+
+    def get_section_index(self, pos:int) -> int:
+        return pos + self.get_visible_pieces_index()[0]
 
     def get_visible_pieces(self) -> list[Piece]:
         start_index, end_index = self.get_visible_pieces_index()
@@ -60,12 +79,15 @@ class Player:
     def get_visible_pieces_size(self) -> int:
         return len(self.get_visible_pieces())
 
-    def draw(self, can_buy:bool) -> None:
-        self.draw_bottom_elements(can_buy)
+    def draw(self, can_buy:bool, last_pieces:dict[tuple[int, int]]) -> None:
+        self.draw_bottom_elements(can_buy, last_pieces)
     
-    def draw_bottom_elements(self, can_buy:bool) -> None:
+    def draw_bottom_elements(self, can_buy:bool, last_pieces:dict[tuple[int, int]]) -> None:
         Painter.draw_rect(screen=self.screen, size=(config.SCREEN_WIDTH, self.bottom_size_y), 
                           pos=(0, config.SCREEN_HEIGHT - self.bottom_size_y), dist=5, b_color='#A0522D')
+        
+        Painter.blit_text_shadow(screen=self.screen, text=f'P{self.id + 1}', 
+                                color='red', pos=(10, config.SCREEN_HEIGHT - (self.bottom_size_y - 10)))
         
         if not self.is_show_pieces:
             self.show_button.draw_text_button(screen=self.screen, text='S H O W', text_color='red', font_size=42)
@@ -80,25 +102,32 @@ class Player:
 
             if self.is_prev_section:
                 self.prev_section_button.draw_text_button(screen=self.screen, text='<', text_color='red', font_size=42)
-
-            Painter.blit_text_shadow(screen=self.screen, text=f'P{self.id + 1}', 
-                                    color='red', pos=(10, config.SCREEN_HEIGHT - (self.bottom_size_y - 10)))
-            
-            self.draw_player_pieces()
+                
+            self.draw_player_pieces(last_pieces)
         
-            for i in range(self.get_visible_pieces_size()): ## REMOVER
-                self.choose_piece_button[i].draw_button(self.screen)
-
-    def draw_player_pieces(self) -> None:
+    def draw_player_pieces(self, last_pieces:dict[tuple[int, int]]) -> None:
         if self.pieces:
-            x_space = 0
-            for piece in self.get_visible_pieces():
-                pos = (20 + x_space, config.SCREEN_HEIGHT - self.bottom_size_y)
-                #piece.draw(self.screen, pos, config.PIECE_DIRECTION_DOWN)
-                #Modificar a cor da peça se ela é playable ou se está selecionada
-                x_space += 10
+            for i, piece in enumerate(self.get_visible_pieces()):
+                button_pos = self.choose_piece_button[i].get_rect(topleft=True)
+                half_piece_height = self.choose_piece_size[1]/2
 
-        
+                first_pos = button_pos
+                second_pos = (button_pos[0], button_pos[1] + half_piece_height)
+                size = (self.choose_piece_size[0], half_piece_height)
+
+                piece.draw(self.screen, first_pos, second_pos, config.PIECE_DIRECTION_DOWN, 
+                           player=True, size=size)
+
+                # Indicator Rects                
+                piece_pos = (button_pos, self.choose_piece_size)
+                piece_index = self.get_section_index(pos=i)
+                if not self.is_selected_piece:
+                    if any(self.pieces[piece_index].is_playable(last_pieces)):
+                        pygame.draw.rect(self.screen, 'green', piece_pos, 3)
+                else:
+                    if piece_index == self.selected_piece:
+                        pygame.draw.rect(self.screen, 'red', piece_pos, 3)
+
     def update(self, can_buy:bool, buy_piece:Callable[[], Piece]) -> None:
         self.validate_sections()
         self.input(can_buy, buy_piece)
@@ -106,7 +135,13 @@ class Player:
     def choose_piece(self):
         for i in range(self.get_visible_pieces_size()):
             if self.choose_piece_button[i].is_pressed():
-                self.selected_piece = i + self.get_visible_pieces_index()[0]
+                if self.get_section_index(pos=i) == self.selected_piece:
+                    self.is_selected_piece = False
+                    self.selected_piece = -1
+                    return
+                
+                self.selected_piece = self.get_section_index(pos=i)
+                self.is_selected_piece = True
     
     def validate_sections(self) -> None:
         qnt_pieces = self.get_visible_pieces_size()

@@ -17,7 +17,6 @@ class Game:
 
         self.control_game = Control()
         self.start_window = StartWindow(self.control_game.active_game)
-        self.player = Player(0)
 
     def run(self):
         while True:
@@ -28,7 +27,7 @@ class Game:
 
             TimerManager.update_timers()
 
-            if self.control_game.run_game:
+            if self.control_game.active: # MODIFICAR A FORMA DE UPDATE
                 self.control_game.draw()
                 self.control_game.update()
             else:
