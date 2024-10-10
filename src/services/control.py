@@ -1,10 +1,8 @@
 import pygame
 from random import randint
 
-from models.piece import Piece
 import resources.settings as config
-from models.map import Map
-from models.player import Player
+from models import AIPlayer, HumanPlayer, Piece, Map
 from utils.screen import Painter
 from managers.timer_manager import TimerManager
 
@@ -38,10 +36,9 @@ class Control:
         self.players = []
         for i, ply_type in enumerate(players):
             if ply_type == config.PLAYER:
-                self.players.append(Player(i))
-            else: # AI
-                #self.players.append(AIPlayer(i))
-                pass
+                self.players.append(HumanPlayer(i))
+            else:
+                self.players.append(AIPlayer(i))
 
     def next_player(self) -> None:
         atual_player = self.get_atual_player()
