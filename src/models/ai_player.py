@@ -1,5 +1,3 @@
-import pygame
-
 from models.player import Player
 
 class AIPlayer(Player): 

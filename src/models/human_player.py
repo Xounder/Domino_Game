@@ -2,10 +2,9 @@ from typing import Callable
 import pygame
 
 import resources.settings as config
+from models.player import Player
 from models.piece import Piece
 from utils.screen import Painter, RectButton, Button
-
-from models.player import Player
 
 class HumanPlayer(Player):
     def __init__(self, id: int) -> None:

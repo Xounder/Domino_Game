@@ -2,9 +2,9 @@ import pygame
 from random import randint
 
 import resources.settings as config
-from models import AIPlayer, HumanPlayer, Piece, Map
+from models import AIPlayer, HumanPlayer, Piece, Map, Player
 from utils.screen import Painter
-from managers.timer_manager import TimerManager
+from managers import TimerManager
 
 class Control:
     def __init__(self):

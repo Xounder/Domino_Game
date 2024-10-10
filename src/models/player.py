@@ -1,9 +1,6 @@
-from typing import Callable
 import pygame
 
-import resources.settings as config
 from models.piece import Piece
-from utils.screen import Painter, RectButton, Button
 
 class Player:
     def __init__(self, id:int) -> None:
