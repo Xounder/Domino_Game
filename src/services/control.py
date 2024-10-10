@@ -158,8 +158,8 @@ class Control:
                              b_color='#ffffef')
 
     def draw(self) -> None:
+        self.map_game.draw()
         if self.game_status == self.RUN:
-            self.map_game.draw()
             if TimerManager.is_run(self.player_message_timer):
                 self.draw_message(self.get_message_to_draw())
 
