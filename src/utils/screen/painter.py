@@ -68,6 +68,19 @@ class Painter:
     @staticmethod
     def draw_message(screen:pygame.display, size:tuple[int, int], center_pos:tuple[int, int], dist:int,
                          message:str, text_color:str, f_color:str='black', b_color:str='gray') -> None:
+        """
+        Draws a message with a border rectangle on the screen.
+        
+        Args:
+            screen (pygame.display): The surface to draw on.
+            size (tuple[int, int]): The size of the rectangle around the message.
+            center_pos (tuple[int, int]): The center position to place the message.
+            dist (int): The border thickness.
+            message (str): The message text to display.
+            text_color (str): The color of the message text.
+            f_color (str): The fill color of the rectangle.
+            b_color (str): The border color of the rectangle.
+        """
         pos = (center_pos[0] - size[0]/2, center_pos[1] - size[1]/2)
         Painter.draw_rect(screen, size, pos, dist, f_color=f_color, b_color=b_color)
         Painter.blit_text(screen, message, text_color, center_pos, center=True)

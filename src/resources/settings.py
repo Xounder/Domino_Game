@@ -22,14 +22,14 @@ domino_pieces = [
     [6, 6]
 ]
 
-# direções em que as peças podem ser desenhadas
+# Direções em que as peças podem ser desenhadas
 PIECE_DIRECTION_CENTER = 'center'
 PIECE_DIRECTION_DOWN = 'down'
 PIECE_DIRECTION_LEFT = 'left'
 PIECE_DIRECTION_RIGHT = 'right'
 PIECE_DIRECTION_UP = 'up'
 
-# posições das peças no mapa
+# Posições das peças no mapa
 pieces_pos = {
     'right': [
         [6, 4], [7, 4], [8, 4], [9, 4], [10, 4], [11, 4], [12, 4], [12, 3], [12, 2], [12, 1], [12, 0],
@@ -44,7 +44,7 @@ pieces_pos = {
     ]
 }
 
-# formas de draw em cada posição no mapa
+# Formas de draw em cada posição no mapa
 pieces_orientation = {
     'right': [
         PIECE_DIRECTION_CENTER, PIECE_DIRECTION_RIGHT, PIECE_DIRECTION_RIGHT, PIECE_DIRECTION_RIGHT, PIECE_DIRECTION_RIGHT, 

@@ -4,7 +4,15 @@ import resources.settings as config
 from utils.screen import RectButton, CircleButton, Painter
 
 class StartWindow:
+    """
+    Represents the start window of the game where players can select the number of players, type of player, and start the game.
+    """
+
     def __init__(self):
+        """
+        Initializes the StartWindow class. 
+        Sets up buttons for selecting players, the start button, and other related UI elements.
+        """
         self.screen = pygame.display.get_surface()
         self.initialize()
 
@@ -26,11 +34,19 @@ class StartWindow:
                                               dist=3, center= True) for i in range(4)]
 
     def initialize(self):
+        """
+        Initializes or resets the player configuration to default settings.
+        Sets the default number of players and activates the window.
+        """ 
         self.players = [config.PLAYER for i in range(4)]
         self.qnt_ply = config.MIN_QUANTITY_PLAYER
         self.active = True
 
     def draw(self):
+        """
+        Draws the start window, including buttons for selecting the number of players, player types, and the start button.
+        Uses different colors to highlight selected player options.
+        """
         self.start_button.draw_text_button(self.screen, text='START', text_color='black', 
                                            font_size=42, text_back_color='white')
 
@@ -55,9 +71,15 @@ class StartWindow:
             button.draw_text_button(self.screen, config.type_players[self.players[i]], 'red', 32)
 
     def update(self):
+        """
+        Updates the state of the start window
+        """
         self.input()
 
     def input(self):
+        """
+        Handles logic for selecting the number of players, player types, and triggering the start of the game.
+        """
         if self.qnt_ply == config.MAX_QUANTITY_PLAYER:
             self.dual_mode_button.is_pressed()
         else:

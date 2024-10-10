@@ -7,7 +7,17 @@ from models.piece import Piece
 from utils.screen import Painter, RectButton, Button
 
 class HumanPlayer(Player):
+    """
+    A class representing a human player in the game. Inherits from the Player class.
+    """
+     
     def __init__(self, id: int) -> None:
+        """
+        Initializes a HumanPlayer object with specific UI buttons and game piece management.
+
+        Args:
+            id (int): The unique identifier for the player.
+        """
         super().__init__(id)
         self.MAX_PIECES_ON_SCREEN = 7
 
@@ -36,6 +46,9 @@ class HumanPlayer(Player):
         self.reset()
 
     def reset(self) -> None:
+        """
+        Resets the player’s state, including section, selected piece, and other control flags.
+        """
         self.section = 0
         self.selected_piece = -1
         self.is_selected_piece = False
@@ -47,30 +60,84 @@ class HumanPlayer(Player):
     def get_piece_playable_sides(self, piece_id:int, 
                                  last_pieces:dict[tuple[int, int]], 
                                  starting_double:tuple[int, int]) -> tuple[bool, bool]:
+        """
+        Determines if the specified piece can be played on either side of the board.
+
+        Args:
+            piece_id (int): The index of the piece to check.
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+
+        Returns:
+            tuple[bool, bool]: A tuple indicating if the piece can be played on the left or right side.
+        """
         return self.pieces[piece_id].is_playable(last_pieces, starting_double)
 
     def get_visible_pieces_index(self) -> tuple[int, int]:
+        """
+        Gets the starting and ending indices of the pieces currently visible to the player.
+
+        Returns:
+            tuple[int, int]: A tuple containing the start and end indices of visible pieces.
+        """
         start_index = self.section * self.MAX_PIECES_ON_SCREEN
         end_index = min(start_index + self.MAX_PIECES_ON_SCREEN, len(self.pieces))
         return (start_index, end_index)
 
     def get_section_index(self, pos:int) -> int:
+        """
+        Converts a visual index to an actual index in the player's pieces array.
+
+        Args:
+            pos (int): The index relative to the visible section of pieces.
+
+        Returns:
+            int: The index in the overall list of pieces.
+        """
         return pos + self.get_visible_pieces_index()[0]
 
     def get_visible_pieces(self) -> list[Piece]:
+        """
+        Retrieves the list of pieces currently visible to the player.
+
+        Returns:
+            list[Piece]: A list of pieces in the current visible section.
+        """
         start_index, end_index = self.get_visible_pieces_index()
         return self.pieces[start_index:end_index]
     
     def get_visible_pieces_size(self) -> int:
+        """
+        Gets the number of pieces currently visible to the player.
+
+        Returns:
+            int: The number of visible pieces.
+        """
         return len(self.get_visible_pieces())
 
     # Override
     def draw(self, can_buy:bool, last_pieces:dict[tuple[int, int]], starting_double:tuple[int, int]) -> None:
+        """
+        Draws the bottom elements and player’s pieces on the screen.
+
+        Args:
+            can_buy (bool): Indicates if the player can buy a new piece.
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+        """
         self.draw_bottom_elements(can_buy, last_pieces, starting_double)
     
     def draw_bottom_elements(self, can_buy:bool, 
                              last_pieces:dict[tuple[int, int]], 
                              starting_double:tuple[int, int]) -> None:
+        """
+        Draws the interactive buttons and player’s piece section at the bottom of the screen.
+
+        Args:
+            can_buy (bool): Indicates if the player can buy a new piece.
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+        """
         Painter.draw_rect(screen=self.screen, size=(config.SCREEN_WIDTH, self.bottom_size_y), 
                           pos=(0, config.SCREEN_HEIGHT - self.bottom_size_y), dist=5, b_color='#A0522D')
         
@@ -94,6 +161,13 @@ class HumanPlayer(Player):
             self.draw_player_pieces(last_pieces, starting_double)
         
     def draw_player_pieces(self, last_pieces:dict[tuple[int, int]], starting_double:tuple[int, int]) -> None:
+        """
+        Draws the player's visible pieces on the screen.
+
+        Args:
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+        """
         if self.pieces:
             for i, piece in enumerate(self.get_visible_pieces()):
                 button_pos = self.choose_piece_button[i].get_rect(topleft=True)
@@ -121,10 +195,22 @@ class HumanPlayer(Player):
     # Override
     def update(self, can_buy:bool, buy_piece:Callable[[], Piece], 
                last_pieces:dict[tuple[int, int]], starting_double:tuple[int, int]) -> None:
+        """
+        Updates the player's state and handles input during their turn.
+
+        Args:
+            can_buy (bool): Indicates if the player can buy a new piece.
+            buy_piece (Callable[[], Piece]): A function to buy a new piece.
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+        """
         self.validate_sections()
         self.input(can_buy, buy_piece, last_pieces, starting_double)
 
     def choose_piece(self):
+        """
+        Handles the selection of a piece from the visible pieces.
+        """
         for i in range(self.get_visible_pieces_size()):
             if self.choose_piece_button[i].is_pressed():
                 if self.get_section_index(pos=i) == self.selected_piece:
@@ -134,14 +220,26 @@ class HumanPlayer(Player):
                 self.select_piece(self.get_section_index(pos=i))
 
     def select_piece(self, pos:int) -> None:
+        """
+        Selects a piece by its position in the player’s collection.
+
+        Args:
+            pos (int): The position of the piece to select.
+        """
         self.selected_piece = pos
         self.is_selected_piece = True
 
     def deselect_piece(self) -> None:
+        """
+        Deselects the currently selected piece
+        """
         self.is_selected_piece = False
         self.selected_piece = -1
 
     def validate_sections(self) -> None:
+        """
+        Validates and updates the availability of next and previous sections based on the number of pieces.
+        """
         qnt_pieces = self.get_visible_pieces_size()
         start_index, end_index = self.get_visible_pieces_index()
         size_pieces_list = len(self.pieces)
@@ -154,6 +252,15 @@ class HumanPlayer(Player):
         
     def input(self, can_buy:bool, buy_piece:Callable[[], Piece], 
               last_pieces:dict[tuple[int, int]], starting_double:tuple[int, int]) -> None:
+        """
+        Handles the player's input, including navigation through sections and piece selection.
+
+        Args:
+            can_buy (bool): Indicates if the player can buy a new piece.
+            buy_piece (Callable[[], Piece]): A function to buy a new piece.
+            last_pieces (dict[tuple[int, int]]): The current pieces at the board edges.
+            starting_double (tuple[int, int]): The starting double piece.
+        """
         if not self.is_show_pieces:
             self.is_show_pieces = self.show_button.is_pressed()
         else:

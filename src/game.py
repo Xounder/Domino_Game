@@ -7,7 +7,14 @@ from services.start_window import StartWindow
 from managers import TimerManager, UpdaterManager
 
 class Game:
+    """
+    Main game class to handle initialization and game loop.
+    """
+
     def __init__(self):
+        """
+        Initializes the game, sets up the screen, background, and controllers.
+        """
         pygame.init()
         self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         pygame.display.set_caption('Dominó')
@@ -22,10 +29,22 @@ class Game:
         UpdaterManager.set_exclusive_update(self.start_window, self.start_game)
         
     def start_game(self) -> None:
+        """
+        Starts the game with the selected players and mode.
+
+        Args:
+            None
+        """
         self.game_controller.active_game(self.start_window.players, 
                                          self.start_window.dual_mode_button.pressed)
 
     def run(self):
+        """
+        Main game loop that handles events, updates the game state, and redraws the screen.
+        
+        Args:
+            None
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

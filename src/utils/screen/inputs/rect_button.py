@@ -24,7 +24,7 @@ class RectButton(Button):
         self.dist = dist
 
     def draw_button(self, screen:pygame.display, f_color:str='black', 
-                    b_color:list[str]=['red', 'gray']) -> None:
+                    b_color:tuple[str, str]=('red', 'gray')) -> None:
         """
         Draws an animated rectangle with color changes based on mouse hover.
         
@@ -39,8 +39,19 @@ class RectButton(Button):
 
     def draw_text_button(self, screen:pygame.display, text:str, text_color:str, font_size:int,
                          text_back_color:str='black', f_color:str='black', 
-                         b_color:list[str]=['red', 'gray']) -> None:
-        
+                         b_color:tuple[str, str]=('red', 'gray')) -> None:
+        """
+        Draws the button with text, updating the text color based on mouse hover.
+
+        Args:
+            screen (pygame.display): The surface to draw on.
+            text (str): The text to display on the button.
+            text_color (str): The color of the text.
+            font_size (int): The size of the font.
+            text_back_color (str): The color of the text background.
+            f_color (str): The fill color of the rectangle.
+            b_color (tuple): The background colors for hover effects.
+        """
         self.draw_button(screen, f_color, b_color)
         text_color = b_color[1] if self.is_rect_collide_point(pygame.mouse.get_pos()) else text_color
         Painter.blit_text_shadow(screen, text, text_color, self.rect.center, 

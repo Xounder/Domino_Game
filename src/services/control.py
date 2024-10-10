@@ -7,7 +7,14 @@ from utils.screen import Painter
 from managers import TimerManager
 
 class Control:
+    """
+    Manages the game logic, player turns, piece distribution, game state (win, draw, running), and drawing messages.
+    """
+
     def __init__(self):
+        """
+        Initializes the Control class, setting up the game state, timers, and the map.
+        """
         self.screen = pygame.display.get_surface()
         self.active = False
         self.WIN = 1
@@ -23,6 +30,13 @@ class Control:
         TimerManager.add_timer(self.message_timer, duration=3)
 
     def active_game(self, players:list[str], dual_mode:bool) -> None:
+        """
+        Starts the game with the specified players and mode. Initializes game elements such as the map and players.
+
+        Args:
+            players (list[str]): List of player types ('HumanPlayer' or 'AIPlayer').
+            dual_mode (bool): Whether the game is in dual mode (teams of two players).
+        """
         self.all_pieces = config.domino_pieces[:]
         self.game_status = self.RUN 
         self.ply_id = 0
@@ -33,6 +47,12 @@ class Control:
         self.distribute_pieces()
 
     def create_players(self, players:list[str]) -> None:
+        """
+        Creates player instances based on the provided player types.
+
+        Args:
+            players (list[str]): List of player types ('HumanPlayer' or 'AIPlayer').
+        """
         self.players = []
         for i, ply_type in enumerate(players):
             if ply_type == config.PLAYER:
@@ -41,6 +61,9 @@ class Control:
                 self.players.append(AIPlayer(i))
 
     def next_player(self) -> None:
+        """
+        Advances to the next player, resetting the current player's state and checking for a win condition.
+        """
         atual_player = self.get_atual_player()
         atual_player.reset()
         self.ply_id = self.get_player_id(qnt_next=1)
@@ -49,6 +72,9 @@ class Control:
         TimerManager.active_timer(self.player_message_timer)
             
     def import_pieces_assets(self) -> None:
+        """
+        Loads and scales the image assets for the domino pieces.
+        """
         self.pieces_surf = {'up': [], 'down': [], 'left': [], 'right': []}
         for key in self.pieces_surf:
             pieces_surf = [pygame.image.load(f'img/pieces/{key}/{i}.png').convert() for i in range(7)]
@@ -56,6 +82,9 @@ class Control:
                                         (config.TILE_SIZE/2, config.TILE_SIZE/2)) for i in range(7)]
             
     def distribute_pieces(self) -> None:
+        """
+        Distributes domino pieces to players and determines the starting double piece.
+        """
         starting_double = (-1, -1)
         pieces_players = []
         piece_player = []
@@ -80,31 +109,82 @@ class Control:
                 self.players[i].add_piece(piece) 
 
     def buy_piece(self) -> Piece:
+        """
+        Buys a random piece from the remaining pieces and returns a Piece object.
+
+        Returns:
+            Piece: The purchased piece.
+        """
         choosed_piece = randint(0, self.get_remaining_pieces() - 1)
         piece_values = self.all_pieces.pop(choosed_piece)
         piece_assets = self.get_pieces_assets(piece_values)
         return Piece(piece_values, piece_assets)
     
     def get_atual_player(self) -> Player:
+        """
+        Returns the current player based on the player ID.
+
+        Returns:
+            Player: The current player object.
+        """
         return self.players[self.ply_id]
     
     def get_remaining_pieces(self) -> int:
+        """
+        Returns the number of remaining pieces in the game.
+
+        Returns:
+            int: The number of remaining pieces.
+        """
         return len(self.all_pieces)     
 
     def get_piece_asset(self, piece_value:int) -> dict[str, pygame.Surface]:
+        """
+        Returns the image asset for a given piece value.
+
+        Args:
+            piece_value (int): The value of the domino piece.
+
+        Returns:
+            dict[str, pygame.Surface]: A dictionary containing image assets for the piece.
+        """
         piece_asset = {}
         for key, value in self.pieces_surf.items():
             piece_asset[key] = value[piece_value]
         return piece_asset
     
     def get_pieces_assets(self, piece_values: tuple[int, int]) -> tuple[dict, dict]:
+        """
+        Returns the image assets for two given piece values.
+
+        Args:
+            piece_values (tuple[int, int]): The values of the two domino pieces.
+
+        Returns:
+            tuple[dict, dict]: A tuple containing dictionaries of image assets for both pieces.
+        """
         piece_assets = tuple(self.get_piece_asset(piece_value) for piece_value in piece_values)
         return piece_assets
     
     def get_player_id(self, qnt_next:int) -> int:
+        """
+        Returns the ID of the next player based on the current player ID.
+
+        Args:
+            qnt_next (int): The number of players to skip.
+
+        Returns:
+            int: The ID of the next player.
+        """
         return (self.ply_id + qnt_next) % len(self.players)
     
     def get_message_to_draw(self) -> str:
+        """
+        Returns the message to be displayed based on the current game status (running, win, or draw).
+
+        Returns:
+            str: The message to be displayed.
+        """
         if self.game_status == self.RUN:
             message = f'Player {self.ply_id + 1}'
         elif self.game_status == self.WIN:
@@ -119,9 +199,21 @@ class Control:
         return message
     
     def can_buy(self) -> bool:
+        """
+        Returns whether the current player can buy a piece.
+
+        Returns:
+            bool: True if the player can buy a piece, False otherwise.
+        """
         return self.get_remaining_pieces() > 0
 
     def is_win(self) -> bool:
+        """
+        Checks if the current player has won the game.
+
+        Returns:
+            bool: True if the current player has won, False otherwise.
+        """
         atual_player = self.get_atual_player()
         if atual_player.is_win():
             index = self.get_player_id(qnt_next=2)
@@ -134,6 +226,12 @@ class Control:
         return False
 
     def is_draw(self) -> bool:
+        """
+        Checks if the game has ended in a draw.
+
+        Returns:
+            bool: True if the game is a draw, False otherwise.
+        """
         if self.get_remaining_pieces() > 0: return False
         
         for ply in self.players:
@@ -145,9 +243,18 @@ class Control:
         return True
     
     def active_end_game_message(self) -> None:
+        """
+        Activates the end game message timer to display the win/draw message.
+        """
         TimerManager.active_timer(self.message_timer)
     
     def draw_message(self, message:str) -> None:
+        """
+        Draws the message to the screen.
+
+        Args:
+            message (str): The message to be displayed.
+        """
         Painter.draw_message(screen=self.screen, 
                              size=(300, 100), 
                              center_pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2),
@@ -158,6 +265,9 @@ class Control:
                              b_color='#ffffef')
 
     def draw(self) -> None:
+        """
+        Draws the game state on the screen, including the map and player message if the game is running.
+        """
         self.map_game.draw()
         if self.game_status == self.RUN:
             if TimerManager.is_run(self.player_message_timer):
@@ -171,6 +281,9 @@ class Control:
                 self.draw_message(self.get_message_to_draw())
 
     def update(self) -> None:
+        """
+        Updates the game state, processes the current player's turn, and checks for win or draw conditions.
+        """
         if self.game_status == self.RUN:
             atual_player = self.get_atual_player()
             if not atual_player.played:
