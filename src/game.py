@@ -63,7 +63,6 @@ class Game:
             else:
                 UpdaterManager.set_exclusive_update(self.start_window, self.start_game)
 
-            TimerManager.update_timers()
             UpdaterManager.update()
 
             pygame.display.update()
