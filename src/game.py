@@ -1,22 +1,30 @@
 import pygame, sys
 
-from resources.settings import *
+import resources.settings as config
 from services.control import Control
 from services.start_window import StartWindow
 
 from managers.timer_manager import TimerManager
-
-from models.player import Player
+from managers.updater_manager import UpdaterManager
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         pygame.display.set_caption('Dominó')
         self.clock = pygame.time.Clock()
 
-        self.control_game = Control()
-        self.start_window = StartWindow(self.control_game.active_game)
+        background = pygame.image.load('img/background.jpg').convert()
+        self.background = pygame.transform.scale(background, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
+        self.background_rect = self.background.get_rect(topleft= (0, 0))
+
+        self.game_controller = Control()
+        self.start_window = StartWindow()
+        UpdaterManager.set_exclusive_update(self.start_window, self.start_game)
+        
+    def start_game(self) -> None:
+        self.game_controller.active_game(self.start_window.players, 
+                                         self.start_window.dual_mode_button.pressed)
 
     def run(self):
         while True:
@@ -25,14 +33,20 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            TimerManager.update_timers()
+            self.screen.blit(self.background, self.background_rect)
 
-            if self.control_game.active: # MODIFICAR A FORMA DE UPDATE
-                self.control_game.draw()
-                self.control_game.update()
-            else:
+            if self.start_window.active:
                 self.start_window.draw()
-                self.start_window.update()
+            else:
+                UpdaterManager.set_exclusive_update(self.game_controller, self.start_window.initialize)
+
+            if self.game_controller.active:
+                self.game_controller.draw()
+            else:
+                UpdaterManager.set_exclusive_update(self.start_window, self.start_game)
+
+            TimerManager.update_timers()
+            UpdaterManager.update()
 
             pygame.display.update()
             self.clock.tick(60)

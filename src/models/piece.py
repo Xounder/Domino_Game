@@ -11,12 +11,12 @@ class Piece:
     def is_double(self) -> bool:
         return self.values[0] == self.values[1]
     
-    def is_playable(self, last_pieces:dict[tuple[int, int]]) -> tuple[bool, bool]:
+    def is_playable(self, last_pieces:dict[tuple[int, int]], starting_double:tuple[int, int]) -> tuple[bool, bool]:
         right, left = last_pieces.keys()
 
-        if last_pieces[right] == last_pieces[left]:
-            is_double = self.is_double()
-            return (is_double, is_double)
+        if last_pieces[right] == last_pieces[left] == (0, 0):
+            is_starting_double = starting_double == self.values
+            return (is_starting_double, is_starting_double)
         
         return tuple(self.values[0] == piece[1] or self.values[1] == piece[1] for piece in last_pieces.values())
     
@@ -44,32 +44,15 @@ class Piece:
             second_surf = pygame.transform.scale(second_surf, size)
             
         return (first_surf, second_surf)
+    
+    def reverse_piece(self, piece_direction:str) -> None:
+        self.values.reverse()
+        self.first_surf_piece, self.second_surf_piece = self.second_surf_piece, self.first_surf_piece
 
     def draw(self, screen:pygame.display, first_pos:tuple[int, int], second_pos:tuple[int, int], 
                     orientation:str, player:bool=False, size:tuple[int, int]=[]) -> None:
         piece_orientation = self.get_piece_orientantion(orientation)
         first_surf, second_surf = self.get_piece_surfaces(piece_orientation, player, size)
                                                    
-        screen.blit(first_surf, first_pos) 
-        screen.blit(second_surf, second_pos)
-
-    '''def draw_pieces_table(self, piece, pos, type_piece):
-        # desenha as peças que foram jogadas/estão na mesa
-        x = pos[0]
-        y = pos[1]        
-        if type_piece == 'mid': #mid center
-            self.display_surface.blit(self.pieces_surf['up'][piece[0]], (x + tile_size/4, y)) 
-            self.display_surface.blit(self.pieces_surf['down'][piece[1]], (x + tile_size/4, y + tile_size/2))
-        elif type_piece == 'right': #right
-            self.display_surface.blit(self.pieces_surf['left'][piece[0]], (x - tile_size/4, y + tile_size/4))
-            self.display_surface.blit(self.pieces_surf['right'][piece[1]], (x + tile_size/4, y + tile_size/4))
-        elif type_piece == 'left': #left
-            self.display_surface.blit(self.pieces_surf['right'][piece[0]], (x + 3*tile_size/4, y + tile_size/4))
-            self.display_surface.blit(self.pieces_surf['left'][piece[1]], (x + tile_size/4, y + tile_size/4))
-        elif type_piece == 'up': #up right/left
-            self.display_surface.blit(self.pieces_surf['up'][piece[1]], (x + tile_size/4, y + tile_size/4))
-            self.display_surface.blit(self.pieces_surf['down'][piece[0]], (x + tile_size/4, y + 3*tile_size/4))
-        elif type_piece == 'down': #down right/left
-            self.display_surface.blit(self.pieces_surf['up'][piece[0]], (x + tile_size/4, y - tile_size/4))
-            self.display_surface.blit(self.pieces_surf['down'][piece[1]], (x + tile_size/4, y + tile_size/4))'''
-
+        screen.blit(first_surf, first_pos if orientation != config.PIECE_DIRECTION_UP else second_pos) 
+        screen.blit(second_surf, second_pos if orientation != config.PIECE_DIRECTION_UP else first_pos)

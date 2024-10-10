@@ -9,17 +9,16 @@ class CircleButton(Button):
     Represents a clickable circle with optional animation effects.
     """
 
-    def __init__(self, size:int, rect_pos:tuple[int, int], colors:list[str], 
+    def __init__(self, size:int, rect_pos:tuple[int, int], 
                  center:bool=True, topleft:bool=False) -> None:
         super().__init__((size, size), rect_pos, center, topleft)
-        self.colors = colors
         self.radius = size
         self.pressed = False
 
     def draw_button(self, screen:pygame.display, back_color:str='black') -> None:
-        color = self.colors[1] if self.pressed else back_color
-        pygame.draw.circle(screen, self.colors[0], self.rect.center, self.radius, 3)
-        pygame.draw.circle(screen, color, self.rect.center, int(self.radius/2))
+        pygame.draw.circle(screen, 'black', self.rect.center, self.radius, 3)
+        if self.pressed:
+            pygame.draw.circle(screen, back_color, self.rect.center, int(self.radius/2))
 
     def draw_text_button(self, screen:pygame.display, text:str, text_color:str,
                         text_back_color:str='black', font_size:int=42, back_color='black'):

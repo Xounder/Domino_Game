@@ -65,4 +65,10 @@ class Painter:
         pygame.draw.rect(screen, f_color, (pos[0], pos[1], size[0], size[1]), 0)
         pygame.draw.rect(screen, b_color, (pos[0] + dist , pos[1] + dist, size[0] - dist * 2 , size[1] - dist * 2), 0)
 
+    @staticmethod
+    def draw_message(screen:pygame.display, size:tuple[int, int], center_pos:tuple[int, int], dist:int,
+                         message:str, text_color:str, f_color:str='black', b_color:str='gray') -> None:
+        pos = (center_pos[0] - size[0]/2, center_pos[1] - size[1]/2)
+        Painter.draw_rect(screen, size, pos, dist, f_color=f_color, b_color=b_color)
+        Painter.blit_text(screen, message, text_color, center_pos, center=True)
 

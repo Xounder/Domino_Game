@@ -23,9 +23,10 @@ MIN_QUANTITY_PLAYER = 2
 MAX_QUANTITY_PLAYER = 4
 
 # Tipos de Jogadores
+QUANTITY_PLAYER_TYPES = 2
 PLAYER = 0
 AI = 1
-INACTIVE = 2
+type_players = ['Player', 'AI']
 
 all_pieces = [
     [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6],

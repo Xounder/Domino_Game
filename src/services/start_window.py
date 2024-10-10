@@ -1,62 +1,79 @@
 import pygame
 
 import resources.settings as config
-from utils.screen import RectButton, CircleButton
+from utils.screen import RectButton, CircleButton, Painter
 
 class StartWindow:
-    def __init__(self, active_game):
-        self.display_surface = pygame.display.get_surface()
-        self.active_game = active_game
-        self.qnt_ply = config.MIN_QUANTITY_PLAYER
-        self.dual_mode = False
-        
-        # Quantity Players - Selectors
+    def __init__(self):
+        self.screen = pygame.display.get_surface()
+        self.initialize()
+
         pos = [config.SCREEN_WIDTH/2 - 330, config.SCREEN_HEIGHT/2 - 222]
-        self.players_buttons = [RectButton(surf_size=(200, 125), rect_pos=((pos[0] + (i * 200)), pos[1]), 
+        size = (200, 125)
+        self.players_buttons = [RectButton(surf_size=size, rect_pos=((pos[0] + i * (size[0] + 5)), pos[1]), 
                                  dist=3, topleft=True)  for i in range(3)]
         
-        # Start Button
         self.start_button = RectButton(surf_size=(255, 75), 
                                        rect_pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT - 100), 
                                        dist=3, center=True) 
 
-        # Dual Mode Button
         self.dual_mode_button = CircleButton(size=12,
-                                            rect_pos=(config.SCREEN_WIDTH - 300, config.SCREEN_HEIGHT/2 - 70), 
-                                            colors=['red', 'blue'])
+                                            rect_pos=(config.SCREEN_WIDTH - 300, config.SCREEN_HEIGHT/2 - 70))
+        
+        pos = (config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2)
+        size = (120, 40)
+        self.type_player_button = [RectButton(surf_size=size, rect_pos=(pos[0] + 20, pos[1] + i * (size[1] + 5)), 
+                                              dist=3, center= True) for i in range(4)]
+
+    def initialize(self):
+        self.players = [config.PLAYER for i in range(4)]
+        self.qnt_ply = config.MIN_QUANTITY_PLAYER
+        self.active = True
 
     def draw(self):
-        self.start_button.draw_text_button(self.display_surface, text='START', text_color='black', 
+        self.start_button.draw_text_button(self.screen, text='START', text_color='black', 
                                            font_size=42, text_back_color='white')
 
         if self.qnt_ply == config.MAX_QUANTITY_PLAYER:
-            self.dual_mode_button.draw_text_button(self.display_surface, text='P1 & P3 X P2 & P4',
+            self.dual_mode_button.draw_text_button(self.screen, text='P1 & P3 X P2 & P4',
                                                    text_color='red', text_back_color='white',
                                                    font_size=30, back_color='black')
             
         for i, ply_button in enumerate(self.players_buttons):
             rect_color = 'red' if i + config.MIN_QUANTITY_PLAYER == self.qnt_ply else 'black'
-
-            ply_button.draw_text_button(self.display_surface, 
-                                                    text=f'{i + config.MIN_QUANTITY_PLAYER} Players', 
-                                                    text_color='black', font_size=42, text_back_color='white', 
-                                                    f_color=rect_color)
+            ply_button.draw_text_button(self.screen, 
+                                        text=f'{i + config.MIN_QUANTITY_PLAYER} Players', 
+                                        text_color='black', font_size=42, text_back_color='white', 
+                                        f_color=rect_color)
         
+        for i in range(self.qnt_ply):
+            button = self.type_player_button[i]
+            width = button.get_rect(size=True)[0]/2 + 30
+            pos = button.get_rect(center=True)
+
+            Painter.blit_text_shadow(self.screen, f'P{i + 1}:', 'red', (pos[0] - width, pos[1]), center=True)
+            button.draw_text_button(self.screen, config.type_players[self.players[i]], 'red', 32)
+
     def update(self):
         self.input()
 
     def input(self):
         if self.qnt_ply == config.MAX_QUANTITY_PLAYER:
-            self.dual_mode = self.dual_mode_button.is_pressed()
+            self.dual_mode_button.is_pressed()
+        else:
+            self.dual_mode_button.pressed = False
 
         if self.start_button.is_pressed():
-            self.active_game(self.qnt_ply, self.dual_mode)
+            self.players = self.players[:self.qnt_ply]
+            if self.players.count(config.PLAYER) > 0:
+                self.active = False
 
         for i, ply_button in enumerate(self.players_buttons):
             if ply_button.is_pressed(): 
                 self.qnt_ply = i + config.MIN_QUANTITY_PLAYER
                 break
-
-    def reset(self):
-        self.dual_mode = False
-        self.qnt_ply = 2
+        
+        for i, type_ply in enumerate(self.type_player_button):
+            if type_ply.is_pressed():
+                self.players[i] = (self.players[i] + 1) % config.QUANTITY_PLAYER_TYPES
+  
