@@ -4,7 +4,7 @@ import resources.settings as config
 from services.control import Control
 from services.start_window import StartWindow
 
-from managers import TimerManager, UpdaterManager
+from managers import UpdaterManager
 
 class Game:
     """
