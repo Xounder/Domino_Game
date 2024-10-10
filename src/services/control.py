@@ -4,7 +4,7 @@ from random import randint
 import resources.settings as config
 from models import AIPlayer, HumanPlayer, Piece, Map, Player
 from utils.screen import Painter
-from managers import TimerManager
+from managers import TimerManager, SoundManager
 
 class Control:
     """
@@ -247,6 +247,8 @@ class Control:
         Activates the end game message timer to display the win/draw message.
         """
         TimerManager.active_timer(self.message_timer)
+        sound_name = 'draw' if self.game_status == self.DRAW else 'won'
+        SoundManager.play_sound(sound_name=sound_name)
     
     def draw_message(self, message:str) -> None:
         """

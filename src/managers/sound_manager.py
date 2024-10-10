@@ -31,7 +31,7 @@ class SoundManager:
                 SoundManager.all_sounds[sound_name] = s
 
     @staticmethod
-    def play_sound(sound_name:str) -> None:
+    def play_sound(sound_name:str, loops:int=0) -> None:
         """
         Plays the specified sound. Stops the currently playing sound if any.
 
@@ -40,5 +40,5 @@ class SoundManager:
         """
         if SoundManager.atual_sound: 
             SoundManager.all_sounds[SoundManager.atual_sound].stop()
-        SoundManager.all_sounds[sound_name].play()
+        SoundManager.all_sounds[sound_name].play(loops=loops)
         SoundManager.atual_sound = sound_name

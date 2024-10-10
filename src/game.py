@@ -3,8 +3,7 @@ import pygame, sys
 import resources.settings as config
 from services.control import Control
 from services.start_window import StartWindow
-
-from managers import UpdaterManager
+from managers import UpdaterManager, SoundManager
 
 class Game:
     """
@@ -19,6 +18,8 @@ class Game:
         self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         pygame.display.set_caption('Dominó')
         self.clock = pygame.time.Clock()
+
+        SoundManager.initialize()
 
         background = pygame.image.load('img/background.jpg').convert()
         self.background = pygame.transform.scale(background, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))

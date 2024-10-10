@@ -1,5 +1,6 @@
 import pygame
 
+from managers.sound_manager import SoundManager
 import resources.settings as config
 from utils.screen import RectButton, CircleButton, Painter
 
@@ -41,6 +42,7 @@ class StartWindow:
         self.players = [config.PLAYER for i in range(4)]
         self.qnt_ply = config.MIN_QUANTITY_PLAYER
         self.active = True
+        SoundManager.play_sound(sound_name='music_theme', loops=-1)
 
     def draw(self):
         """
